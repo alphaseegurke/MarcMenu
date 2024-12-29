@@ -2,7 +2,7 @@
 
 ## Description
 
-**MarcMenu** is a powerful yet easy-to-use DLL injector with a user-friendly interface built with [ImGui](https://github.com/ocornut/imgui). The app allows injecting DLLs into Windows processes and offers advanced features such as logging, process management and debugging.
+**MarcMenu** is a powerful yet easy-to-use DLL injector with a user-friendly interface. The app allows injecting DLLs into Windows processes and offers advanced features such as logging, process management and debugging.
 
 ⚠ **Note:** This application is intended for educational purposes only. Use for illegal or unauthorized activities is prohibited.
 
