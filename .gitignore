@@ -1,0 +1,38 @@
+# Compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+dist/
+build/
+*.spec
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Logs
+*.log
+logs/
+
+# Sensitive data
+gui/access_codes.py
+utils/smtp_config.py
+
+# Backup files
+SystemBackup/
+**/backup/
+*.bak
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Windows specific
+Thumbs.db
+desktop.ini

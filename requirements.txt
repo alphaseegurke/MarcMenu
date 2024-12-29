@@ -1,0 +1,8 @@
+PySide6
+pygame
+pymem
+psutil
+numpy
+pynput==1.7.6
+requests==2.31.0
+pytz==2024.1
