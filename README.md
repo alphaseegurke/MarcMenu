@@ -6,14 +6,6 @@
 
 ⚠ **Note:** This application is intended for educational purposes only. Use for illegal or unauthorized activities is prohibited.
 
-## Features
-
-- **Modern GUI**: With tabs, themes and easy operation.
-- **Process Manager**: List of all running processes.
-- **Configuration file**: Storage of settings.
-- **Real-time logging**: For debugging.
-- **Example DLL**: For testing.
-
 ## ⚠ IMPORTANT INFORMATION! ⚠
 
 This script doesn't work yet!
@@ -23,6 +15,19 @@ Works?
 - [ ] Yes
 - [x] No
 
+# Use
+
+- **1**: Go to the *dist* folder
+- **2**: Start the main.exe
+
+## Features
+
+- **Modern GUI**: With tabs, themes and easy operation.
+- **Process Manager**: List of all running processes.
+- **Configuration file**: Storage of settings.
+- **Real-time logging**: For debugging.
+- **Example DLL**: For testing.
+  
 ## License
 
 This project is licensed under the MIT License. For more information, see the [LICENSE](LICENSE) file.
