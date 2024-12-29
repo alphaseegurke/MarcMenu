@@ -4,15 +4,7 @@ __pycache__/
 *$py.class
 *.so
 dist/
-build/
 *.spec
-
-# Environment
-.env
-.venv
-env/
-venv/
-ENV/
 
 # Logs
 *.log
