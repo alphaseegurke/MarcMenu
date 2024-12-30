@@ -131,9 +131,13 @@ class ESPAimbotGUI(QMainWindow):
 
         # Tabs
         self.tabs = QTabWidget()
-        self.create_settings_tab()
+        self.create_home_tab()
+        self.create_performance_boost_tab()
+        self.create_cheats_tab()
         self.create_process_manager_tab()
+        self.create_premium_tab()
         self.create_credits_tab()
+        self.create_admin_tab()
         self.layout.addWidget(self.tabs)
 
         # Notfall-Quit Button
@@ -160,372 +164,170 @@ class ESPAimbotGUI(QMainWindow):
         container.setLayout(self.layout)
         self.setCentralWidget(container)
 
-    def create_settings_tab(self):
-        settings_tab = QWidget()
-        settings_layout = QVBoxLayout()
+    def create_home_tab(self):
+        home_tab = QWidget()
+        home_layout = QVBoxLayout()
 
-        # Funktionen
-        features = [
-            "Enable ESP",
-            "Enable Aimbot",
-            "Enable Auto Aim",
-            "Enable Wallhack",
-            "Enable Silent Aim"
+        welcome_label = QLabel("Willkommen zu MarcMenu!")
+        welcome_label.setStyleSheet("font-size: 24px; font-weight: bold; color: white;")
+        home_layout.addWidget(welcome_label)
+
+        info_label = QLabel("Hier sind alle wichtigen Informationen und Funktionen.")
+        info_label.setStyleSheet("color: white;")
+        home_layout.addWidget(info_label)
+
+        # Weitere wichtige Informationen können hier hinzugefügt werden
+
+        home_tab.setLayout(home_layout)
+        self.tabs.addTab(home_tab, "Home")
+
+    def create_performance_boost_tab(self):
+        performance_tab = QWidget()
+        performance_layout = QVBoxLayout()
+
+        performance_label = QLabel("Performance Boost Optionen:")
+        performance_label.setStyleSheet("color: white;")
+        performance_layout.addWidget(performance_label)
+
+        # Beispieloptionen basierend auf dem Bild
+        options = [
+            "Windows Power Throttling",
+            "Hibernation",
+            "Windows Telemetry",
+            "Windows Update Telemetry"
         ]
-        for feature in features:
-            checkbox = QCheckBox(feature)
-            checkbox.setFont(QFont("Arial", 12))
-            settings_layout.addWidget(checkbox)
+        for option in options:
+            checkbox = QCheckBox(option)
+            checkbox.setStyleSheet("color: white;")
+            performance_layout.addWidget(checkbox)
 
-        # Sensitivität
-        sensitivity_slider = QSlider(Qt.Horizontal)
-        sensitivity_slider.setMinimum(1)
-        sensitivity_slider.setMaximum(100)
-        sensitivity_slider.setValue(50)
-        sensitivity_label = QLabel("Sensitivity: 50")
-        sensitivity_label.setStyleSheet("color: white;")  # Text weiß machen
-        sensitivity_label.setFont(QFont("Arial", 12))
-        sensitivity_slider.valueChanged.connect(
-            lambda value: sensitivity_label.setText(f"Sensitivity: {value}")
-        )
-        settings_layout.addWidget(sensitivity_label)
-        settings_layout.addWidget(sensitivity_slider)
+        apply_button = QPushButton("Alle Optimierungen anwenden")
+        apply_button.setStyleSheet("background-color: #00ff00; color: black;")
+        performance_layout.addWidget(apply_button)
 
-        settings_tab.setLayout(settings_layout)
-        self.tabs.addTab(settings_tab, "Settings")
+        performance_tab.setLayout(performance_layout)
+        self.tabs.addTab(performance_tab, "Performance")
+
+    def create_cheats_tab(self):
+        cheats_tab = QWidget()
+        cheats_layout = QVBoxLayout()
+
+        cheats_label = QLabel("Cheats für dein Spiel:")
+        cheats_label.setStyleSheet("color: white;")
+        cheats_layout.addWidget(cheats_label)
+
+        # Beispieloptionen basierend auf dem Bild
+        cheats_options = [
+            "Gott-Modus",
+            "Unbegrenzte Munition",
+            "Teleport",
+            "Unsichtbarkeit"
+        ]
+        for cheat in cheats_options:
+            checkbox = QCheckBox(cheat)
+            checkbox.setStyleSheet("color: white;")
+            cheats_layout.addWidget(checkbox)
+
+        cheats_tab.setLayout(cheats_layout)
+        self.tabs.addTab(cheats_tab, "Cheats")
 
     def create_process_manager_tab(self):
         process_tab = QWidget()
         process_layout = QVBoxLayout()
-        process_tab.setStyleSheet("""
-            QWidget {
-                background-color: #1a1a1a;
-            }
-            QLineEdit {
-                background-color: #333333;
-                color: white;
-                padding: 8px;
-                border: 1px solid #444444;
-                border-radius: 4px;
-                margin: 5px;
-            }
-        """)
 
-        # Titel und Suchfeld
-        header_layout = QHBoxLayout()
-        title_label = QLabel("Process Manager")
-        title_label.setStyleSheet("""
-            color: #00ff00;
-            font-size: 18px;
-            font-weight: bold;
-            padding: 10px;
-        """)
-        
-        self.process_search = QLineEdit()
-        self.process_search.setPlaceholderText("Search processes...")
-        self.process_search.textChanged.connect(self.filter_processes)
-        
-        header_layout.addWidget(title_label)
-        header_layout.addWidget(self.process_search)
-        process_layout.addLayout(header_layout)
+        process_label = QLabel("Aktive Prozesse:")
+        process_label.setStyleSheet("color: white;")
+        process_layout.addWidget(process_label)
 
-        # Tabelle für Prozesse
         self.process_table = QTableWidget()
-        self.process_table.setColumnCount(3)  # PID, Name, Inject Button
-        self.process_table.setHorizontalHeaderLabels(["PID", "Process Name", "Actions"])
-        self.process_table.horizontalHeader().setStretchLastSection(True)
-        
+        self.process_table.setColumnCount(2)
+        self.process_table.setHorizontalHeaderLabels(["Prozessname", "PID"])
+        self.load_processes()
         process_layout.addWidget(self.process_table)
-        
-        # Button Container
-        button_container = QWidget()
-        button_layout = QHBoxLayout()
-        
-        refresh_button = QPushButton("Refresh Process List")
-        refresh_button.setIcon(self.style().standardIcon(QStyle.SP_BrowserReload))
-        refresh_button.clicked.connect(self.refresh_process_list)
-        
-        button_layout.addWidget(refresh_button)
-        button_container.setLayout(button_layout)
-        process_layout.addWidget(button_container)
-        
+
+        inject_button = QPushButton("In Spiel injizieren")
+        inject_button.clicked.connect(self.inject_into_game)
+        process_layout.addWidget(inject_button)
+
         process_tab.setLayout(process_layout)
         self.tabs.addTab(process_tab, "Process Manager")
-        self.refresh_process_list()
 
-    def filter_processes(self):
-        search_text = self.process_search.text().lower()
-        for row in range(self.process_table.rowCount()):
-            process_name = self.process_table.item(row, 1).text().lower()
-            self.process_table.setRowHidden(row, search_text not in process_name)
-
-    def refresh_process_list(self):
+    def load_processes(self):
+        processes = psutil.process_iter(['name', 'pid'])
         self.process_table.setRowCount(0)
-        try:
-            for proc in psutil.process_iter(['pid', 'name', 'status', 'memory_info']):
-                try:
-                    if proc.status() == 'running':  # Nur laufende Prozesse anzeigen
-                        row = self.process_table.rowCount()
-                        self.process_table.insertRow(row)
-                        
-                        # PID
-                        self.process_table.setItem(row, 0, QTableWidgetItem(str(proc.info['pid'])))
-                        
-                        # Name
-                        self.process_table.setItem(row, 1, QTableWidgetItem(proc.info['name']))
-                        
-                        # Inject Button
-                        inject_btn = QPushButton("Inject")
-                        inject_btn.setStyleSheet("""
-                            QPushButton {
-                                background-color: #1a5f00;
-                                color: white;
-                                padding: 3px 8px;
-                                border: none;
-                                border-radius: 2px;
-                                font-weight: bold;
-                                font-size: 10px;
-                            }
-                            QPushButton:hover {
-                                background-color: #2d8a0f;
-                                border: 1px solid #00ff00;
-                            }
-                        """)
-                        inject_btn.clicked.connect(lambda checked, pid=proc.info['pid']: self.show_inject_dialog(pid))
-                        
-                        # Container für den Button
-                        btn_container = QWidget()
-                        btn_layout = QHBoxLayout(btn_container)
-                        btn_layout.addWidget(inject_btn)
-                        btn_layout.setContentsMargins(5, 2, 5, 2)
-                        self.process_table.setCellWidget(row, 2, btn_container)
-                        
-                except (psutil.NoSuchProcess, psutil.AccessDenied):
-                    continue
-        except Exception as e:
-            QMessageBox.warning(self, "Error", f"Failed to refresh process list: {str(e)}")
+        for process in processes:
+            row_position = self.process_table.rowCount()
+            self.process_table.insertRow(row_position)
+            self.process_table.setItem(row_position, 0, QTableWidgetItem(process.info['name']))
+            self.process_table.setItem(row_position, 1, QTableWidgetItem(str(process.info['pid'])))
 
-    def show_inject_dialog(self, pid):
-        try:
-            process = psutil.Process(pid)
-            dialog = QDialog(self)
-            dialog.setWindowTitle(f"Inject into {process.name()} (PID: {pid})")
-            dialog.setFixedSize(500, 400)
-            dialog.setStyleSheet("""
-                QDialog {
-                    background-color: #1a1a1a;
-                    color: white;
-                }
-                QLabel {
-                    color: #00ff00;
-                    font-size: 12px;
-                }
-                QTextEdit {
-                    background-color: #2d2d2d;
-                    color: #00ff00;
-                    border: 1px solid #444444;
-                    border-radius: 4px;
-                    font-family: 'Consolas', monospace;
-                    font-size: 12px;
-                    padding: 5px;
-                }
-                QPushButton {
-                    background-color: #1a5f00;
-                    color: white;
-                    padding: 8px 15px;
-                    border: none;
-                    border-radius: 4px;
-                    min-width: 100px;
-                    font-weight: bold;
-                }
-                QPushButton:hover {
-                    background-color: #2d8a0f;
-                    border: 1px solid #00ff00;
-                }
-            """)
+    def inject_into_game(self):
+        # Logik zum Injizieren in ein Spiel implementieren
+        QMessageBox.information(self, "Injizieren", "In Spiel injizieren Funktion ist noch nicht implementiert.")
 
-            layout = QVBoxLayout()
+    def create_premium_tab(self):
+        premium_tab = QWidget()
+        premium_layout = QVBoxLayout()
 
-            # Process Info
-            info_label = QLabel(f"Memory Usage: {process.memory_info().rss / 1024 / 1024:.1f} MB")
-            layout.addWidget(info_label)
+        premium_label = QLabel("Kaufe Premium-Funktionen!")
+        premium_label.setStyleSheet("font-size: 24px; color: white;")
+        premium_layout.addWidget(premium_label)
 
-            # Vordefinierte Hacks mit Syntax Highlighting
-            default_code = """// MarcMenu Hack Code
-#include <Windows.h>
+        premium_info = QLabel("Erhalte Zugriff auf exklusive Cheats und Funktionen.")
+        premium_info.setStyleSheet("color: white;")
+        premium_layout.addWidget(premium_info)
 
-// ESP Configuration
-void EnableESP() {
-    // Wallhack
-    WriteProcessMemory(handle, (LPVOID)0x12345678, &value, sizeof(value), NULL);
-    
-    // Glow ESP
-    float glowColor[] = {1.0f, 0.0f, 0.0f, 1.0f};  // Red glow
-    WriteProcessMemory(handle, (LPVOID)0x87654321, glowColor, sizeof(glowColor), NULL);
-}
+        buy_button = QPushButton("Jetzt kaufen")
+        buy_button.setStyleSheet("background-color: #00ff00; color: black;")
+        premium_layout.addWidget(buy_button)
 
-// Aimbot Configuration
-void EnableAimbot() {
-    // Auto-aim settings
-    float aimSmoothing = 2.0f;
-    int aimBone = 8;  // Head bone
-    bool autoShoot = true;
-    
-    // Implement aimbot logic here
-    // ...
-}
-
-// Main injection point
-void MainHack() {
-    EnableESP();
-    EnableAimbot();
-    
-    // Additional features
-    // ...
-}"""
-
-            code_edit = QTextEdit()
-            code_edit.setText(default_code)
-            layout.addWidget(code_edit)
-
-            # Buttons
-            button_layout = QHBoxLayout()
-            
-            inject_button = QPushButton("Inject Code")
-            inject_button.clicked.connect(lambda: self.inject_code(pid, code_edit.toPlainText()))
-            
-            test_button = QPushButton("Test Connection")
-            test_button.clicked.connect(lambda: self.test_process_connection(pid))
-            
-            button_layout.addWidget(test_button)
-            button_layout.addWidget(inject_button)
-            layout.addLayout(button_layout)
-
-            dialog.setLayout(layout)
-            dialog.exec_()
-            
-        except psutil.NoSuchProcess:
-            QMessageBox.warning(self, "Error", "Process no longer exists!")
-        except psutil.AccessDenied:
-            QMessageBox.warning(self, "Error", "Access denied to process!")
-
-    def test_process_connection(self, pid):
-        try:
-            process = psutil.Process(pid)
-            if process.is_running():
-                QMessageBox.information(self, "Success", "Connection to process successful!")
-            else:
-                QMessageBox.warning(self, "Error", "Process is not running!")
-        except:
-            QMessageBox.warning(self, "Error", "Failed to connect to process!")
-
-    def inject_code(self, pid, code):
-        # Hier kommt die eigentliche Inject-Logik hin
-        QMessageBox.information(self, "Success", f"Code injected into process {pid}")
+        premium_tab.setLayout(premium_layout)
+        self.tabs.addTab(premium_tab, "Premium")
 
     def create_credits_tab(self):
-        credits_tab = QScrollArea()
-        credits_tab.setWidgetResizable(True)
-        credits_content = QWidget()
+        credits_tab = QWidget()
         credits_layout = QVBoxLayout()
-        credits_content.setStyleSheet("""
-            QWidget {
-                background-color: #000000;
-                border: none;
-            }
-        """)
-
-        credits_text = QLabel(
-            "MarcMenu Client\nVersion 1.0.0\n\n"
-            "Developed by alphaseegurke\n"
-            "Special thanks to:\n"
-            "- Developer Team\n"
-            "- Beta Testers\n\n"
-            "© 2024 All Rights Reserved."
-        )
-        credits_text.setFont(QFont("Arial", 14))
-        credits_text.setStyleSheet("""
-            QLabel {
-                color: #00ff00;
-                background-color: transparent;
-                padding: 20px;
-            }
-        """)
-        credits_text.setAlignment(Qt.AlignCenter)
-        
-        # Verbesserte DVD-Style Animation
-        self.direction_x = 1
-        self.direction_y = 1
-        self.animation_speed = 2  # Langsamere Geschwindigkeit
-        self.animation_timer = QTimer(self)
-        self.animation_timer.timeout.connect(lambda: self.move_credits(credits_text))
-        self.animation_timer.start(30)  # Smoothere Animation
-        
-        credits_layout.addWidget(credits_text)
-        credits_content.setLayout(credits_layout)
-        credits_tab.setWidget(credits_content)
-        credits_tab.setStyleSheet("""
-            QScrollArea {
-                background-color: #000000;
-                border: none;
-            }
-        """)
-
+        credits_label = QLabel("Credits")
+        credits_label.setStyleSheet("color: white;")
+        credits_layout.addWidget(credits_label)
+        credits_tab.setLayout(credits_layout)
         self.tabs.addTab(credits_tab, "Credits")
 
-    def move_credits(self, label):
-        pos = label.pos()
-        parent_rect = label.parent().rect()
-        label_rect = label.rect()
-        
-        # Sanftere Bewegung
-        new_x = pos.x() + (self.animation_speed * self.direction_x)
-        new_y = pos.y() + (self.animation_speed * self.direction_y)
-        
-        # Präzisere Rand-Erkennung
-        if new_x <= 0:
-            new_x = 0
-            self.direction_x = 1  # Nach rechts bewegen
-        elif new_x + label_rect.width() >= parent_rect.width():
-            new_x = parent_rect.width() - label_rect.width()
-            self.direction_x = -1  # Nach links bewegen
-            
-        if new_y <= 0:
-            new_y = 0
-            self.direction_y = 1  # Nach unten bewegen
-        elif new_y + label_rect.height() >= parent_rect.height():
-            new_y = parent_rect.height() - label_rect.height()
-            self.direction_y = -1  # Nach oben bewegen
-        
-        label.move(new_x, new_y)
+    def create_admin_tab(self):
+        admin_tab = QWidget()
+        admin_layout = QVBoxLayout()
 
-    def load_stylesheet(self, theme):
-        if theme == "dark":
-            return """
-                QMainWindow {
-                    background-color: #121212;
-                    color: white;
-                }
-                QTabWidget::pane {
-                    background: #1e1e1e;
-                }
-                QLabel, QCheckBox, QPushButton {
-                    font-size: 14px;
-                }
-            """
+        # Admin Zugangscode
+        self.admin_code_input = QLineEdit()
+        self.admin_code_input.setPlaceholderText("Admin Zugangscode")
+        admin_layout.addWidget(self.admin_code_input)
+
+        admin_button = QPushButton("Zugang gewähren")
+        admin_button.clicked.connect(self.check_admin_access)
+        admin_layout.addWidget(admin_button)
+
+        self.admin_message = QLabel("")
+        admin_layout.addWidget(self.admin_message)
+
+        admin_tab.setLayout(admin_layout)
+        self.tabs.addTab(admin_tab, "Admin")
+
+        # Admin-Funktionen (initial versteckt)
+        self.admin_functions = QWidget()
+        self.admin_functions_layout = QVBoxLayout()
+        self.admin_functions_label = QLabel("Admin-Funktionen hier...")
+        self.admin_functions_layout.addWidget(self.admin_functions_label)
+        self.admin_functions.setLayout(self.admin_functions_layout)
+        self.admin_functions.setVisible(False)  # Standardmäßig versteckt
+        admin_layout.addWidget(self.admin_functions)
+
+    def check_admin_access(self):
+        admin_code = self.admin_code_input.text()
+        if admin_code == "DEIN_ADMIN_CODE":  # Ersetze durch deinen echten Admin-Code
+            self.admin_message.setText("Zugang gewährt!")
+            self.admin_functions.setVisible(True)  # Admin-Funktionen anzeigen
         else:
-            return """
-                QMainWindow {
-                    background-color: #f5f5f5;
-                    color: black;
-                }
-                QTabWidget::pane {
-                    background: #ffffff;
-                }
-                QLabel, QCheckBox, QPushButton {
-                    font-size: 14px;
-                }
-            """
+            self.admin_message.setText("Ungültiger Zugangscode!")
 
     def emergency_exit(self):
         warning_box = QMessageBox(self)
@@ -609,6 +411,9 @@ class LoginRegisterScreen(QWidget):
         self.code_input.setPlaceholderText("Zugangscode")
         self.code_input.setEchoMode(QLineEdit.Password)
         layout.addWidget(self.code_input)
+
+        self.remember_me_checkbox = QCheckBox("Angemeldet bleiben")
+        layout.addWidget(self.remember_me_checkbox)
 
         self.login_button = QPushButton("Anmelden", self)
         self.login_button.clicked.connect(self.login)
