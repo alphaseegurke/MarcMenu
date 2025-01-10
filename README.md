@@ -13,7 +13,8 @@ Here it will be as soon as it works.
 
 Works?
 - [ ] Yes
-- [x] No
+- [x] Half
+- [ ] No
 
 # Use
 
